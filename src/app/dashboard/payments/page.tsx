@@ -17,6 +17,7 @@ import { Suspense, memo, useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { CopyButton } from '@/components/CopyButton';
+import { CurrencyInput } from '@/components/CurrencyInput';
 import { FormField } from '@/components/FormField';
 import Modal from '@/components/Modal';
 import { SkeletonList, SkeletonTableRows } from '@/components/Skeleton';
@@ -574,6 +575,66 @@ function PaymentsPageContent() {
               role="alert"
               data-testid="create-payment-error"
               className="rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300"
+            >
+              {createError}
+            </p>
+          )}
+          <fieldset disabled={creating} className="space-y-4">
+            <CurrencyInput
+              label="Amount (USD)"
+              name="amountUsd"
+              currencySymbol="$"
+              required
+              value={form.amountUsd}
+              onValueChange={(amountUsd) =>
+                setForm((current) => ({ ...current, amountUsd }))
+              }
+            />
+            <FormField
+              label="Description (optional)"
+              name="description"
+              type="text"
+              required={false}
+              maxLength={MAX_DESCRIPTION_LENGTH}
+              hint={
+                <span data-testid="description-char-counter">
+                  {form.description.length}/{MAX_DESCRIPTION_LENGTH}
+                </span>
+              }
+              value={form.description}
+              onChange={(e) =>
+                setForm({ ...form, description: e.target.value })
+              }
+            />
+            <FormField
+              label="Customer Email (optional)"
+              name="customerEmail"
+              type="email"
+              required={false}
+              value={form.customerEmail}
+              onChange={(e) =>
+                setForm({ ...form, customerEmail: e.target.value })
+              }
+            />
+            <FormField
+              label="Expires in (minutes)"
+              name="expiryMinutes"
+              type="number"
+              aria-describedby="expiry-minutes-hint"
+              value={form.expiryMinutes}
+              onChange={(e) =>
+                setForm({ ...form, expiryMinutes: e.target.value })
+              }
+            />
+            <p id="expiry-minutes-hint" className="text-xs text-gray-500">
+              Must be a whole number between {EXPIRY_MIN_MINUTES} and{' '}
+              {EXPIRY_MAX_MINUTES} minutes.
+            </p>
+            <button
+              data-testid="create-payment-submit"
+              type="submit"
+              disabled={creating}
+              className="btn-primary w-full"
             >
               {createError}
             </p>
