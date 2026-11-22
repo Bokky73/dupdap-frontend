@@ -1,10 +1,12 @@
 import { Toaster } from 'react-hot-toast';
+import { I18nextProvider } from 'react-i18next';
 
 import CookieConsent from '@/components/CookieConsent';
 import { QueryProvider } from '@/components/QueryProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ThemeScript } from '@/components/ThemeScript';
 import { LocaleProvider } from '@/lib/locale';
+import { i18nInstance } from '@/i18n';
 import { MockProvider } from '@/mocks/MockProvider';
 
 import type { Metadata } from 'next';
@@ -32,7 +34,7 @@ export default function RootLayout({
         <ThemeScript />
       </head>
       <body>
-        <MockProvider>
+        </MockProvider>
           <QueryProvider>
             <LocaleProvider>
               <ThemeProvider>
@@ -42,7 +44,19 @@ export default function RootLayout({
               </ThemeProvider>
             </LocaleProvider>
           </QueryProvider>
-        </MockProvider>
+        <I18nextProvider i18n={i18nInstance}>
+          <MockProvider>
+            <QueryProvider>
+              <LocaleProvider>
+                <ThemeProvider>
+                  {children}
+                  <Toaster position="top-right" />
+                  <CookieConsent />
+                </ThemeProvider>
+              </LocaleProvider>
+            </QueryProvider>
+          </MockProvider>
+        </I18nextProvider>
       </body>
     </html>
   );
